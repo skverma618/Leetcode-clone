@@ -1,24 +1,32 @@
 class Solution {
-    public int maximumPopulation(int[][] logs) {
-        int n = logs.length;
-        int max = 0;
-        int year = 2051;
+//     My version of Line Sweep = O(N)
+    public int maximumPopulation(int[][] arr) {
+        int n = arr.length;
+        int prevMax = 0;
+        int ans = -1;
+        
+        HashMap<Integer, Integer> map = new HashMap<>();
+        
+        for(int i = 0; i < n ; i++) {
+            int born = arr[i][0];
+            int die = arr[i][1];
+            
+            map.put(born, map.getOrDefault(born, 0) + 1);
+            map.put(die, map.getOrDefault(die, 0) - 1);
+        }
+        
+        int sum = 0;
+
         
         for(int i = 1950; i <= 2050; i++) {
             int count = 0;
-            
-            for(int j = 0; j < n ; j++) {
-                if(logs[j][0] <= i && logs[j][1] > i) count++;
-            }
-            
-            // System.out.println(i + " " + count + " " + max);
-            if(count > 0 && count > max) {
-                max = count;
-                year = i;
-            } else if(count > 0 && count == max) {
-                year = Math.min(i, year);
+            int netDiff = map.getOrDefault(i, 0);
+            sum += netDiff;
+            if(sum > prevMax) {
+                prevMax = sum;
+                ans = i;
             }
         }
-        return year;
+        return ans;
     }
 }
