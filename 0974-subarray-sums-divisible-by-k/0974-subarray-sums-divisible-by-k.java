@@ -9,9 +9,9 @@ class Solution {
         
         for(int i = 0 ; i < n ; i++) {
             sum += nums[i];
-            // if(nums[i] < 0) sum += k;
+            // if(nums[i] < 0) sum += k;  // MAJOR MISTAKE THAT I WAS MAKING
             int mod = sum % k;
-            if(mod < 0) mod += k;
+            if(mod < 0) mod += k;         // INSTEAD OF THIS, I WAS WRITING THE COMMENTED LINE
             
             if(mod == 0) count++;
             map.put(mod, map.getOrDefault(mod, 0) + 1);
