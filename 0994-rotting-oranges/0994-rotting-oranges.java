@@ -32,7 +32,6 @@ class Solution {
                     }
                 }
             }
-            System.out.println(q.size());
         }
         
         for(int i = 0 ; i < n ; i++) {
