@@ -25,7 +25,6 @@ class Solution {
                 int nc = node[1] + dir[i][1];
                 
                 if(isValid(nr, nc, n, m) && image[nr][nc] == col) {
-                    image[nr][nc] = color;
                     q.add(new int[]{nr, nc});
                 }
             }
