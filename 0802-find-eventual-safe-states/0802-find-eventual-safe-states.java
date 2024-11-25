@@ -1,48 +1,41 @@
 class Solution {
-    boolean dfsCheck(int node,int[][]adj,int pathvis[],int vis[],int check[])
-    {
-        vis[node]=1;
-        pathvis[node]=1;
-        check[node]=0;
-        int p=adj[node].length;
-        int t;
-        for(int i=0;i<p;i++)
-        {
-            t=adj[node][i];
-            if(vis[t]==0){
-            if(dfsCheck(t,adj,pathvis,vis,check)== true) // cycle detected
-            {
-                check[node]=0;
-                return true;
-            }
-            }
-            else if(pathvis[t]==1)// again cycle detected
-            return true;
-        }
-        check[node] = 1;
-        pathvis[node]=0;
-        return false;
-        }
-    
+    int[] safe;
+
     public List<Integer> eventualSafeNodes(int[][] graph) {
-        int v=graph.length;
-        int pathvis[]=new int[v];
-        int vis[]=new int[v];
-        int check[]= new int[v];
+        int n = graph.length;
+        safe = new int[n]; // 0 = unvisited, 1 = safe, -1 = unsafe
 
-        for(int i=0;i<v;i++)
-        {
-            if(vis[i]==0)
-            dfsCheck(i,graph,pathvis,vis,check);
+        for (int i = 0; i < n; i++) {
+            if (safe[i] == 0) { // Only process unvisited nodes
+                dfs(i, graph);
+            }
         }
-        ArrayList<Integer> ans= new ArrayList<Integer>();
-        for(int i=0;i<v;i++)
-        {
-            if(check[i] == 1)
-            ans.add(i);
-        }
-        return ans;
 
-        
+        List<Integer> result = new ArrayList<>();
+        for (int i = 0; i < n; i++) {
+            if (safe[i] == 1) {
+                result.add(i); // Collect all safe nodes
+            }
+        }
+        return result;
+    }
+
+    public boolean dfs(int node, int[][] graph) {
+        if (safe[node] != 0) {
+            return safe[node] == 1; // Return previously computed result
+        }
+
+        // Mark as visiting
+        safe[node] = -1;
+
+        for (int nbr : graph[node]) {
+            if (!dfs(nbr, graph)) {
+                return false; // If any neighbor is unsafe, this node is unsafe
+            }
+        }
+
+        // Mark as safe after all neighbors are processed
+        safe[node] = 1;
+        return true;
     }
 }
