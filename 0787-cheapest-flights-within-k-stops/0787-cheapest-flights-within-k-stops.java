@@ -15,15 +15,20 @@ class Solution {
         PriorityQueue<Pair> pq = new PriorityQueue<>((a, b) -> a.cost - b.cost);
         pq.add(new Pair(src, 0, 0)); // Start with source, 0 stops, and 0 cost.
         
-        // Track minimum costs to reach a city with up to `k+1` stops.
+        // Track the minimum cost to reach each city with a certain number of stops.
         int[][] vis = new int[n][k + 2];
         for (int[] row : vis) Arrays.fill(row, Integer.MAX_VALUE);
         vis[src][0] = 0;
         
+        int result = Integer.MAX_VALUE;
+        
         while (!pq.isEmpty()) {
             Pair curr = pq.poll();
             
-            if (curr.city == dst) return curr.cost; // Found the cheapest path to destination.
+            if (curr.city == dst) {
+                result = Math.min(result, curr.cost);
+                continue;
+            }
             
             if (curr.count > k) continue; // Exceeding stop limit.
             
@@ -32,6 +37,7 @@ class Solution {
                 int fair = next.get(1);
                 int newCost = curr.cost + fair;
                 
+                // Update only if this path is cheaper with the current number of stops.
                 if (newCost < vis[nextCity][curr.count + 1]) {
                     vis[nextCity][curr.count + 1] = newCost;
                     pq.add(new Pair(nextCity, curr.count + 1, newCost));
@@ -39,7 +45,7 @@ class Solution {
             }
         }
         
-        return -1; // Destination unreachable within `k` stops.
+        return result == Integer.MAX_VALUE ? -1 : result;
     }
 }
 
